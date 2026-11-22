@@ -31,19 +31,7 @@ class Speaker(context: Context) {
         val t = tts ?: return
         val gb = Locale.UK
         if (t.isLanguageAvailable(gb) >= TextToSpeech.LANG_AVAILABLE) t.language = gb
-        val voices: Set<Voice> = runCatching { t.voices }.getOrNull().orEmpty()
-        val preferred = voices
-    .filter { it.locale.language == "en" && !it.isNetworkConnectionRequired }
-    .sortedWith(
-        compareByDescending<Voice> {
-            it.name.contains("male", true) &&
-            !it.name.contains("female", true)
-        }
-            .thenByDescending { it.locale.country == "GB" }
-            .thenByDescending { it.quality }
-    )
-            .firstOrNull()
-        preferred?.let { t.voice = it }
+        
         t.setPitch(0.78f)
         t.setSpeechRate(0.92f)
         t.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
